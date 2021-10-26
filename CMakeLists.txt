@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.19...3.22)
 project(RandomSeed LANGUAGES C CXX Fortran)
 enable_testing()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+
 add_executable(c_seed seed.c)
 add_test(NAME "C seed" COMMAND c_seed)
 
@@ -29,4 +31,12 @@ if(Matlab_FOUND)
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
   set_tests_properties("Matlab seed" PROPERTIES TIMEOUT 60)
+endif()
+
+find_package(Octave COMPONENTS Interpreter)
+if(Octave_FOUND)
+  add_test(NAME "Octave seed"
+  COMMAND Octave::Interpreter --eval seed_octave
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
 endif()
