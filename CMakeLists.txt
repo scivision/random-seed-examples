@@ -79,11 +79,22 @@ endif()
 find_package(Octave COMPONENTS Interpreter)
 if(Octave_FOUND)
   add_test(NAME "Octave seed"
-  COMMAND Octave::Interpreter --eval seed_octave
+  COMMAND Octave::Interpreter --eval seed
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
   set_tests_properties("Octave seed" PROPERTIES
   TIMEOUT 15
   PASS_REGULAR_EXPRESSION "0.844422[ ]*0.757954[ ]*0.420572"
+  )
+endif()
+
+find_program(JULIA_EXECUTABLE NAMES julia)
+if(JULIA_EXECUTABLE)
+  add_test(NAME "Julia seed"
+  COMMAND ${JULIA_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/seed.jl
+  )
+  set_tests_properties("Julia seed" PROPERTIES
+  TIMEOUT 15
+  PASS_REGULAR_EXPRESSION "0.823648 0.910357 0.164566"
   )
 endif()

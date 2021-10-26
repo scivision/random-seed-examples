@@ -1,5 +1,7 @@
-rng(0, 'twister')
+if isoctave
+  rand("state", 0)
+else
+  rng(0, 'twister')
+end
 
 disp(num2str(rand(1,3), '%12.6f'))
-
-% 0.814724    0.905792    0.126987
