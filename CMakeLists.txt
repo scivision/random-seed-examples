@@ -11,3 +11,22 @@ target_compile_features(cxx_seed PRIVATE cxx_std_11)
 
 add_executable(fortran_seed seed.f90)
 add_test(NAME "Fortran seed" COMMAND fortran_seed)
+
+set_tests_properties("C seed" "C++ seed" "Fortran seed" PROPERTIES TIMEOUT 5)
+
+find_package(Python COMPONENTS Interpreter)
+if(Python_FOUND)
+  add_test(NAME "Python seed"
+  COMMAND Python::Interpreter ${CMAKE_CURRENT_SOURCE_DIR}/seed.py
+  )
+  set_tests_properties("Python seed" PROPERTIES TIMEOUT 5)
+endif()
+
+find_package(Matlab COMPONENTS MAIN_PROGRAM)
+if(Matlab_FOUND)
+  add_test(NAME "Matlab seed"
+  COMMAND ${Matlab_MAIN_PROGRAM} -batch seed
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+  set_tests_properties("Matlab seed" PROPERTIES TIMEOUT 60)
+endif()
