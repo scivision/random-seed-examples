@@ -4,6 +4,11 @@ enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
+# --- auto-ignore build directory
+if(NOT EXISTS ${PROJECT_BINARY_DIR}/.gitignore)
+  file(WRITE ${PROJECT_BINARY_DIR}/.gitignore "*")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   set(c_regex "21238 7719 38")
   set(cxx_regex "1178568022 1273124119 1535857466")
@@ -23,7 +28,7 @@ endif()
 
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
   set(fortran_regex "0.471078 0.117346 0.884884")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "^Intel")
+elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^Intel")
   set(fortran_regex "0.000000 0.025480 0.352516")
 else()
   set(fortran_regex ".*")
@@ -31,27 +36,18 @@ endif()
 
 add_executable(c_seed seed.c)
 add_test(NAME "C" COMMAND c_seed)
-set_tests_properties("C" PROPERTIES
-PASS_REGULAR_EXPRESSION ${c_regex}
-TIMEOUT 5
-)
+set_property(TEST C PROPERTY PASS_REGULAR_EXPRESSION ${c_regex} TIMEOUT 5)
 
 add_executable(cxx_seed seed.cpp)
 add_test(NAME "Cpp" COMMAND cxx_seed)
 target_compile_features(cxx_seed PRIVATE cxx_std_11)
-set_tests_properties("Cpp" PROPERTIES
-PASS_REGULAR_EXPRESSION ${cxx_regex}
-TIMEOUT 5
-)
+set_property(TEST Cpp PROPERTY PASS_REGULAR_EXPRESSION ${cxx_regex})
+set_property(TEST Cpp PROPERTY TIMEOUT 5)
 
 add_executable(fortran_seed seed.f90)
 add_test(NAME "Fortran" COMMAND fortran_seed)
-set_tests_properties("Fortran" PROPERTIES
-PASS_REGULAR_EXPRESSION ${fortran_regex}
-TIMEOUT 5
-)
-
-
+set_property(TEST Fortran PROPERTY PASS_REGULAR_EXPRESSION ${fortran_regex})
+set_property(TEST Fortran PROPERTY TIMEOUT 5)
 
 find_package(Python COMPONENTS Interpreter)
 if(Python_FOUND)
