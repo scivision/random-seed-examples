@@ -1,6 +1,6 @@
 program seeder
 
-implicit none (type, external)
+implicit none
 
 integer, allocatable :: seed(:)
 integer :: n
