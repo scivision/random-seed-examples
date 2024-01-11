@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+example of setting RNG seed
+"""
+
 import numpy.random
 import numpy as np
 
